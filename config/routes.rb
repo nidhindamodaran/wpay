@@ -7,9 +7,12 @@ Rails.application.routes.draw do
         get 'profile', on: :collection
       end
       
-      resources :bank_accounts do
+      resources :bank_accounts, only: [:create] do
+        post 'primarize', on: :member
+        
         resources :transactions
       end
+
       resources :tokens, only: [] do
         post 'authenticate' , on: :collection
       end
