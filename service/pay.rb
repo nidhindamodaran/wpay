@@ -24,6 +24,8 @@ class Pay
         errors.add(:recipient, 'not_found') && nil
     rescue PrimaryAccountError => e
         errors.add(:primary_account, e.message) && nil
+    ensure
+        raise ActiveRecord::Rollback if errors.present?
     end
 
     def deduct_amount
@@ -33,7 +35,7 @@ class Pay
         transaction = primary_account.transactions.create(
             amount: amount,
             recipient: recipient,
-            transfer_type: :transfered
+            transaction_type: :transfered
         )
         GenerateScratchCard.call(transaction: transaction, primary_account: primary_account)
         primary_account.decrement!(:balance, amount)
@@ -54,7 +56,7 @@ class Pay
     end
 
     def has_sufficient_balance?
-        primary_account.present? && (amount > primary_account.balance)
+        primary_account.present? && (amount <= primary_account.balance)
     end
 
     def benificiary_account

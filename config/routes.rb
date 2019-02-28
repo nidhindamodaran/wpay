@@ -9,9 +9,9 @@ Rails.application.routes.draw do
       
       resources :bank_accounts, only: [:create] do
         post 'primarize', on: :member
-        
-        resources :transactions
       end
+      
+      resources :transactions, only: [:create]
 
       resources :tokens, only: [] do
         post 'authenticate' , on: :collection
