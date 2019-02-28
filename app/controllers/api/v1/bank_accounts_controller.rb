@@ -10,7 +10,7 @@ class Api::V1::BankAccountsController < ApplicationController
     end
 
     def primarize
-        service_response = PrimarizeBankAccount.call(params[:id], current_user)
+        service_response = PrimarizeBankAccount.call(account_number: params[:id], current_user: current_user)
         if service_response.success?
             render json: service_response.result, only: [:name, :id, :ifsc]
         else

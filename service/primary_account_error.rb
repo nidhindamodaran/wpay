@@ -1,0 +1,2 @@
+class PrimaryAccountError < StandardError
+end

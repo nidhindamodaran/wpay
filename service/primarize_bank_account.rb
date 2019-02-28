@@ -1,7 +1,7 @@
 class PrimarizeBankAccount
     prepend SimpleCommand
 
-    def initialize(account_number, current_user)
+    def initialize(account_number:, current_user:)
         @account_number = account_number
         @current_user = current_user
     end

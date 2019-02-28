@@ -1,7 +1,7 @@
 class AuthenticateRequest
     prepend SimpleCommand
 
-    def initialize(headers = {})
+    def initialize(headers: {})
         @headers = headers
     end
 

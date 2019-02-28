@@ -4,7 +4,7 @@ class Api::V1::TokensController < ApplicationController
   # Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE1NTEzNTQ5NTh9.UwGuZZBguZN5Oyt8CGqtKhiudvTh_ds4G0Io2ge6Qa4ß
   
   def authenticate
-    service_response = AuthenticateUser.call(params[:email], params[:password])
+    service_response = AuthenticateUser.call(email: params[:email], password: params[:password])
     if service_response.success?
       render json: {response: service_response.result }
     else

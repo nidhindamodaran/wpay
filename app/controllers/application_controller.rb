@@ -3,7 +3,7 @@ class ApplicationController < ActionController::API
     attr_reader :current_user
 
     def authenticate_request
-        service_response = AuthenticateRequest.call(request.headers)
+        service_response = AuthenticateRequest.call(headers: request.headers)
         if service_response.success?
             @current_user = service_response.result
         else
