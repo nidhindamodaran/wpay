@@ -50,5 +50,5 @@ test:
 production:
   <<: *default
   database: wpay_production
-  username: wpay
+  username: root
   password: <%= ENV['WPAY_DATABASE_PASSWORD'] %>

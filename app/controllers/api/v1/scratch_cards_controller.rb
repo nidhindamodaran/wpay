@@ -1,4 +1,4 @@
-class Api::V1:ScratchCardsController < ApplicationController
+class Api::V1::ScratchCardsController < ApplicationController
   def scratch
     service_reponse = ScratchTheCard.call(scratch_card_id: params[:id], current_user: current_user)
     if service_reponse.success?
