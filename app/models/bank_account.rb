@@ -1,6 +1,6 @@
 class BankAccount < ApplicationRecord
     belongs_to :user, inverse_of: :bank_accounts
-    has_many :transactions, inverse_of: :bank_account
+    has_many :wpay_transactions, inverse_of: :bank_account
     validates :ifsc, uniqueness: {scope: :user_id}
 
     def self.primary_account_of(user: )

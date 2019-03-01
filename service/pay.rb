@@ -18,8 +18,12 @@ class Pay
     attr_reader :amount, :recipient_id, :current_user
 
     def transfer
-        deduct_amount
+        card = deduct_amount
         credit_to_benificiery
+        if card.success?
+            return card.result.as_json(root: true, only: [:id, :amount])
+        end
+
     rescue ActiveRecord::RecordNotFound => exception
         errors.add(:recipient, 'not_found') && nil
     rescue PrimaryAccountError => e
@@ -32,13 +36,15 @@ class Pay
         raise PrimaryAccountError, 'no_account_configured' unless primary_account
         raise PrimaryAccountError, 'no_balance' unless has_sufficient_balance?
 
-        transaction = primary_account.transactions.create(
+        transaction = primary_account.wpay_transactions.create(
             amount: amount,
             recipient: recipient,
             transaction_type: :transfered
         )
-        GenerateScratchCard.call(transaction: transaction, primary_account: primary_account)
+        card = GenerateScratchCard.call(transaction: transaction, current_user: current_user)
         primary_account.decrement!(:balance, amount)
+    
+        return card
     end
 
     def credit_to_benificiery

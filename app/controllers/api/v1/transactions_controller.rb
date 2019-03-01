@@ -6,7 +6,7 @@ class Api::V1::TransactionsController < ApplicationController
             current_user: current_user
         )
         if service_response.success?
-            render json: service_response.result
+            render json: service_response.result.presence || {"success": true}
         else
             render json:{errors: service_response.errors}
         end

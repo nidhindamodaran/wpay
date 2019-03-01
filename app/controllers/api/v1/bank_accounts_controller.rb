@@ -21,7 +21,7 @@ class Api::V1::BankAccountsController < ApplicationController
     private
 
     def bank_account_param
-        params.require(:bank_account).permit(:ifsc, :balance)
+        params.require(:bank_account).permit(:ifsc, :balance, :name)
     end
 
 end

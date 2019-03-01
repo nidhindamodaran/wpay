@@ -7,6 +7,8 @@ class PrimarizeBankAccount
     end
 
     def call
+        return errors.add(:account, "Not Authorized") && nil unless allowed?
+
         deactivated_account = deprimarize_account
         return unless deactivated_account
 
@@ -22,10 +24,10 @@ class PrimarizeBankAccount
         return primary_account.nil? || account.id == primary_account.id
 
         if primary_account.update_attribute(:is_primary, false)
-            primary_account
-        else
-            errors.add(:primary_account, "can't deactivate existing account") && nil
+            return primary_account
         end
+
+        errors.add(:primary_account, "can't deactivate existing account") && nil
     end
 
     def account
@@ -34,5 +36,9 @@ class PrimarizeBankAccount
 
     def primary_account
         @primary_account ||= BankAccount.primary_account_of(user: current_user)
+    end
+
+    def allowed?
+        account.user_id == current_user.id
     end
 end
