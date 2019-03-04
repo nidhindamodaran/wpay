@@ -3,17 +3,19 @@ class ScratchTheCard
 
     def initialize(scratch_card_id:, current_user: )
         @scratch_card_id = scratch_card_id
+        @current_user = current_user
     end
 
     def call
-        raise PrimaryAccountError, 'no primary account'
-
+        raise PrimaryAccountError, 'no primary account' unless primary_account
+        return if scratch_card.seen
+        
         if scratch_card.update_attribute(:seen, true)
             transaction = primary_account.wpay_transactions.create(
                 amount: scratch_card.amount,
                 transaction_type: :rewarded
             )
-
+            primary_account.increment!(:balance, scratch_card.amount)
             return transaction
         end
 
